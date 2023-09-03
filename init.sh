@@ -1,5 +1,6 @@
 #!/bin/bash
 #
-echo "copy backup.sh to /usr/local/bin"
+echo "copy libs & backup.sh to /usr/local/bin"
 chmod +x ./backup.sh
 sudo cp ./backup.sh /usr/local/bin/
+sudo cp ./gcexport.py /usr/local/bin/

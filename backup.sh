@@ -16,4 +16,4 @@ if [ -d $GarminFolder ]; then
 fi
 
 echo "using script:$Script to backup garmin activities with count:$Count"
-# python3 $Script -c $Count -d $GarminFolder --format tcx -u --username $UserName --password $Password
+python3 $Script -c $Count -d $GarminFolder --format tcx -u --username $UserName --password $Password

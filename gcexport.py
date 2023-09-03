@@ -34,6 +34,8 @@ import sys
 import unicodedata
 import urllib.request
 import zipfile
+import socks
+import socket
 from datetime import datetime, timedelta, tzinfo
 from getpass import getpass
 from math import floor
@@ -46,6 +48,10 @@ from urllib.request import Request
 
 # Local application/library specific imports
 from filtering import read_exclude, update_download_stats
+
+PROXY_HOST = '127.0.0.1'  # Replace with your SOCKS proxy host
+PROXY_PORT = 46971        # Replace with your SOCKS proxy port
+PROXY_TYPE = socks.SOCKS5  # Use SOCKS5 proxy type
 
 COOKIE_JAR = http.cookiejar.CookieJar()
 OPENER = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(COOKIE_JAR), urllib.request.HTTPSHandler(debuglevel=0))
@@ -225,6 +231,9 @@ def http_req(url, post=None, headers=None):
     :param headers:      dictionary of headers
     :return: response body (type 'bytes')
     """
+    socks.set_default_proxy(PROXY_TYPE, PROXY_HOST, PROXY_PORT)
+    socket.socket = socks.socksocket
+
     request = Request(url)
     # Tell Garmin we're some supported browser.
     request.add_header(

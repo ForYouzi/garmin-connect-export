@@ -459,6 +459,7 @@ def parse_arguments(argv):
     """
     Setup the argument parser and parse the command line arguments.
     """
+    print("Start to parse args.")
     current_date = datetime.now().strftime('%Y-%m-%d')
     activities_directory = f'./{current_date}_garmin_connect_export'
 
@@ -466,41 +467,41 @@ def parse_arguments(argv):
 
     # fmt: off
     parser.add_argument('--version', action='version', version='%(prog)s ' + SCRIPT_VERSION,
-        help='print version and exit')
+                        help='print version and exit')
     parser.add_argument('-v', '--verbosity', action='count', default=0,
-        help='increase output and log verbosity, save more intermediate files')
+                        help='increase output and log verbosity, save more intermediate files')
     parser.add_argument('--username',
-        help='your Garmin Connect username or email address (otherwise, you will be prompted)')
+                        help='your Garmin Connect username or email address (otherwise, you will be prompted)')
     parser.add_argument('--password',
-        help='your Garmin Connect password (otherwise, you will be prompted)')
+                        help='your Garmin Connect password (otherwise, you will be prompted)')
     parser.add_argument('-c', '--count', default='1',
-        help='number of recent activities to download, or \'all\' (default: 1)')
+                        help='number of recent activities to download, or \'all\' (default: 1)')
     parser.add_argument('-e', '--external',
-        help='path to external program to pass CSV file too')
+                        help='path to external program to pass CSV file too')
     parser.add_argument('-a', '--args',
-        help='additional arguments to pass to external program')
+                        help='additional arguments to pass to external program')
     parser.add_argument('-f', '--format', choices=['gpx', 'tcx', 'original', 'json'], default='gpx',
-        help="export format; can be 'gpx', 'tcx', 'original' or 'json' (default: 'gpx')")
+                        help="export format; can be 'gpx', 'tcx', 'original' or 'json' (default: 'gpx')")
     parser.add_argument('-d', '--directory', default=activities_directory,
-        help='the directory to export to (default: \'./YYYY-MM-DD_garmin_connect_export\')')
+                        help='the directory to export to (default: \'./YYYY-MM-DD_garmin_connect_export\')')
     parser.add_argument('-s', '--subdir',
-        help='the subdirectory for activity files (tcx, gpx etc.), supported placeholders are {YYYY} and {MM} (default: export directory)')
+                        help='the subdirectory for activity files (tcx, gpx etc.), supported placeholders are {YYYY} and {MM} (default: export directory)')
     parser.add_argument('-lp', '--logpath',
-        help='the directory to store logfiles (default: same as for --directory)')
+                        help='the directory to store logfiles (default: same as for --directory)')
     parser.add_argument('-u', '--unzip', action='store_true',
-        help='if downloading ZIP files (format: \'original\'), unzip the file and remove the ZIP file')
+                        help='if downloading ZIP files (format: \'original\'), unzip the file and remove the ZIP file')
     parser.add_argument('-ot', '--originaltime', action='store_true',
-        help='will set downloaded (and possibly unzipped) file time to the activity start time')
+                        help='will set downloaded (and possibly unzipped) file time to the activity start time')
     parser.add_argument('--desc', type=int, nargs='?', const=0, default=None,
-        help='append the activity\'s description to the file name of the download; limit size if number is given')
+                        help='append the activity\'s description to the file name of the download; limit size if number is given')
     parser.add_argument('-t', '--template', default=CSV_TEMPLATE,
-        help='template file with desired columns for CSV output')
+                        help='template file with desired columns for CSV output')
     parser.add_argument('-fp', '--fileprefix', action='count', default=0,
-        help='set the local time as activity file name prefix')
+                        help='set the local time as activity file name prefix')
     parser.add_argument('-sa', '--start_activity_no', type=int, default=1,
-        help='give index for first activity to import, i.e. skipping the newest activities')
+                        help='give index for first activity to import, i.e. skipping the newest activities')
     parser.add_argument('-ex', '--exclude', metavar='FILE',
-        help='JSON file with Array of activity IDs to exclude from download. Format example: {"ids": ["6176888711"]}')
+                        help='JSON file with Array of activity IDs to exclude from download. Format example: {"ids": ["6176888711"]}')
     # fmt: on
 
     return parser.parse_args(argv[1:])
@@ -805,11 +806,11 @@ def export_data_file(activity_id, activity_details, args, file_time, append_desc
     original_basename = None
     if args.format == 'gpx':
         data_filename = os.path.join(directory, f'{prefix}activity_{activity_id}{append_desc}.gpx')
-        download_url = f'{URL_GC_GPX_ACTIVITY}{activity_id}?full=true'
+        download_url = f'{URL_GC_GPX_ACTIVITY}{activity_id}'
         file_mode = 'w'
     elif args.format == 'tcx':
         data_filename = os.path.join(directory, f'{prefix}activity_{activity_id}{append_desc}.tcx')
-        download_url = f'{URL_GC_TCX_ACTIVITY}{activity_id}?full=true'
+        download_url = f'{URL_GC_TCX_ACTIVITY}{activity_id}'
         file_mode = 'w'
     elif args.format == 'original':
         data_filename = os.path.join(directory, f'{prefix}activity_{activity_id}{append_desc}.zip')
